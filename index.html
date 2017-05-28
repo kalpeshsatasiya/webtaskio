@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Webtask - Demo </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+  <link href="css/custom.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+               
+                <a class="navbar-brand" href="#">Webtask Demo</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+           
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+		
+			<div class="col-md-1"><label class="control-form">Title </label> </div>
+            <div class="col-md-2">			
+               <input type="text" id="txtTitle" placeholder="enter title" >
+            </div>
+			<div class="col-md-1">			
+               <input type="button" value="Save" onclick="saveTitle();">
+            </div>
+			<div class="col-md-8">			
+               
+            </div>
+        </div>
+		<div class="loading">Loading&#8230;</div>
+		 <div  class="row">
+			<div class="col-md-12" id="result"></div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery Version 1.11.1 -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".loading").hide();
+		loadTitles();
+	});
+	
+	function loadTitles(){
+	$("#result").html("");
+	$(".loading").show();
+		$.get("https://wt-e6236e92c30af0a22e7033cf1ad82d5e-0.run.webtask.io/getTitles", function(data, status){
+			var result = data.titles;
+			var row = "";
+			for(var i=0;i< result.length; i++){
+				if(result[i].title !== undefined){
+					 row += "<div class='row'>"+ result[i].title +" </div>";
+				}
+			}
+			$("#result").html(row);
+			$(".loading").hide();
+		});
+	}
+	
+	function saveTitle(){
+	$(".loading").show();
+		var title = $("#txtTitle").val();
+		
+		if(title !== '' && title !== undefined){
+			$.get("https://wt-e6236e92c30af0a22e7033cf1ad82d5e-0.run.webtask.io/addTitle?title="+ title, function(data, status){								
+				setTimeout(function(){ loadTitles(); }, 1000);	
+			});
+		}else{
+		alert("Please enter title");
+		}
+	}
+	
+	</script>
+
+</body>
+
+</html>
